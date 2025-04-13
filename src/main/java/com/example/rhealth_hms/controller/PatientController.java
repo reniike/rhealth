@@ -3,6 +3,7 @@ package com.example.rhealth_hms.controller;
 import com.example.rhealth_hms.dtos.PatientDTO;
 import com.example.rhealth_hms.dtos.requests.CreatePatientRequest;
 import com.example.rhealth_hms.services.PatientService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,14 @@ public class PatientController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PatientDTO>> getPatients(){
+    public ResponseEntity<List<PatientDTO>> getAllPatients(){
         return ResponseEntity.ok(patientService.getAllPatients());
     }
+
+    @GetMapping(path = "/{id}")
+    @Operation(summary = "Get patient by patientId")
+    public ResponseEntity<PatientDTO> getPatientById(@PathVariable Long id){
+        return ResponseEntity.ok(patientService.getPatientById(id));
+    }
+
 }

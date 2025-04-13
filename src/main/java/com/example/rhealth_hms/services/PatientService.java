@@ -10,4 +10,6 @@ public interface PatientService {
     PatientDTO createPatient(CreatePatientRequest request);
 
     List<PatientDTO> getAllPatients();
+
+    PatientDTO getPatientById(Long id);
 }

@@ -35,4 +35,10 @@ public class PatientServiceImpl implements PatientService {
                 .map(patient -> patientMapper.toDTO(patient))
                 .toList();
     }
+
+    @Override
+    public PatientDTO getPatientById(Long id) {
+        Patient patient = repository.findById(id).orElseThrow(() -> new RuntimeException("Patient not found!"));
+        return patientMapper.toDTO(patient);
+    }
 }
