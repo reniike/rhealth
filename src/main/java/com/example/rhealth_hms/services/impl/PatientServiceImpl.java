@@ -4,14 +4,16 @@ import com.example.rhealth_hms.data.models.Patient;
 import com.example.rhealth_hms.data.repositories.PatientRepository;
 import com.example.rhealth_hms.dtos.PatientDTO;
 import com.example.rhealth_hms.dtos.requests.CreatePatientRequest;
+import com.example.rhealth_hms.exceptions.RhealthException;
 import com.example.rhealth_hms.mappers.PatientMapper;
 import com.example.rhealth_hms.services.PatientService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @AllArgsConstructor
@@ -19,12 +21,13 @@ import java.util.List;
 public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository repository;
-    private final ModelMapper modelMapper;
     private final PatientMapper patientMapper;
 
     @Override
     public PatientDTO createPatient(CreatePatientRequest request) {
         Patient patient = patientMapper.toEntity(request);
+        patient.setPatientId(generateUniquePatientId());
+
         return patientMapper.toDTO(repository.save(patient));
     }
 
@@ -32,13 +35,29 @@ public class PatientServiceImpl implements PatientService {
     public List<PatientDTO> getAllPatients() {
         List<Patient> patientList = repository.findAll();
         return patientList.stream()
-                .map(patient -> patientMapper.toDTO(patient))
+                .map(patientMapper::toDTO)
                 .toList();
     }
 
     @Override
-    public PatientDTO getPatientById(Long id) {
-        Patient patient = repository.findById(id).orElseThrow(() -> new RuntimeException("Patient not found!"));
+    public PatientDTO getPatientById(String patientId) {
+        Patient patient = repository.findByPatientId(patientId).orElseThrow(() -> new RhealthException("Patient not found!"));
         return patientMapper.toDTO(patient);
     }
+
+    // Output sample: P24-5832
+    public String generatePatientId() {
+            String year = String.valueOf(LocalDate.now().getYear()).substring(2);
+            int random = new Random().nextInt(9000) + 1000;
+            return "P" + year + "-" + random;
+    }
+
+    private String generateUniquePatientId(){
+        String patientId;
+        do {
+            patientId = generatePatientId();
+        } while (repository.existsByPatientId(patientId));
+        return patientId;
+    }
+
 }

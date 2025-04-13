@@ -28,10 +28,10 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getAllPatients());
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/{patientId}")
     @Operation(summary = "Get patient by patientId")
-    public ResponseEntity<PatientDTO> getPatientById(@PathVariable Long id){
-        return ResponseEntity.ok(patientService.getPatientById(id));
+    public ResponseEntity<PatientDTO> getPatientById(@PathVariable String patientId){
+        return ResponseEntity.ok(patientService.getPatientById(patientId));
     }
 
 }
