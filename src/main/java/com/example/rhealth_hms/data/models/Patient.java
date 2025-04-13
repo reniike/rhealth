@@ -3,10 +3,7 @@ package com.example.rhealth_hms.data.models;
 import com.example.rhealth_hms.data.models.enums.BloodGroup;
 import com.example.rhealth_hms.data.models.enums.Genotype;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -15,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "patients")
 public class Patient extends IdEntity{
 

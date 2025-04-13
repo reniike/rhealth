@@ -79,8 +79,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .firstName(request.getName())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .department(request.getDepartment())
-                .status(StaffStatus.OFFLINE
-                )
+                .status(StaffStatus.OFFLINE)
                 .build();
 
         log.info("2");
