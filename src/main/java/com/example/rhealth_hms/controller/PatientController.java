@@ -6,10 +6,9 @@ import com.example.rhealth_hms.services.PatientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,5 +20,10 @@ public class PatientController {
     @PostMapping
     public ResponseEntity<PatientDTO> createPatient(@Valid @RequestBody CreatePatientRequest request){
         return ResponseEntity.ok(patientService.createPatient(request));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PatientDTO>> getPatients(){
+        return ResponseEntity.ok(patientService.getAllPatients());
     }
 }
