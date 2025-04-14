@@ -3,6 +3,7 @@ package com.example.rhealth_hms.services.impl;
 import com.example.rhealth_hms.data.models.Patient;
 import com.example.rhealth_hms.data.models.Queue;
 import com.example.rhealth_hms.data.models.User;
+import com.example.rhealth_hms.data.models.enums.Department;
 import com.example.rhealth_hms.data.repositories.QueueRepository;
 import com.example.rhealth_hms.dtos.QueueDTO;
 import com.example.rhealth_hms.dtos.requests.CreateQueueRequest;
@@ -13,6 +14,8 @@ import com.example.rhealth_hms.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -39,5 +42,18 @@ public class QueueServiceImpl implements QueueService {
         queue.setDepartment(request.getDepartment());
 
         return mapper.toDTO(repository.save(queue));
+    }
+
+    @Override
+    public List<QueueDTO> getQueue(Department department, String staffId) {
+        List<Queue> queues;
+
+        if (staffId != null) {
+            queues = repository.findAllByDepartmentAndStaff_StaffId(department, staffId);
+        } else {
+            queues = repository.findByDepartment(department);
+        }
+
+        return queues.stream().map(mapper::toDTO).toList();
     }
 }
