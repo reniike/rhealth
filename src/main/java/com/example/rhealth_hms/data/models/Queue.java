@@ -25,7 +25,7 @@ public class Queue extends IdEntity{
     private Session session;
 
     @ManyToOne(optional = false)
-    private User recepient;
+    private User recipient;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

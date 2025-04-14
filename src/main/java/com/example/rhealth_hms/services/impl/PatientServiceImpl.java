@@ -4,6 +4,7 @@ import com.example.rhealth_hms.data.models.Patient;
 import com.example.rhealth_hms.data.repositories.PatientRepository;
 import com.example.rhealth_hms.dtos.PatientDTO;
 import com.example.rhealth_hms.dtos.requests.CreatePatientRequest;
+import com.example.rhealth_hms.dtos.requests.UpdatePatientRequest;
 import com.example.rhealth_hms.exceptions.RhealthException;
 import com.example.rhealth_hms.mappers.PatientMapper;
 import com.example.rhealth_hms.services.PatientService;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
+
+import static com.example.rhealth_hms.utils.AppUtils.NOT_FOUND;
 
 @Service
 @AllArgsConstructor
@@ -41,8 +44,19 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public PatientDTO getPatientById(String patientId) {
-        Patient patient = repository.findByPatientId(patientId).orElseThrow(() -> new RhealthException("Patient not found!"));
+        Patient patient = repository.findByPatientId(patientId).orElseThrow(() -> new RhealthException(NOT_FOUND));
         return patientMapper.toDTO(patient);
+    }
+
+    @Override
+    public Patient getPatient(String patientId) {
+        return repository.findByPatientId(patientId).orElseThrow(() -> new RhealthException(NOT_FOUND));
+    }
+
+    @Override
+    public PatientDTO updatePatientDetails(String patientId, UpdatePatientRequest request) {
+        Patient patient = repository.findByPatientId(patientId).orElseThrow(() -> new RhealthException(NOT_FOUND));
+        return patientMapper.toDTO(repository.save(patient));
     }
 
     // Output sample: P24-5832

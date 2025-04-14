@@ -2,6 +2,7 @@ package com.example.rhealth_hms.controller;
 
 import com.example.rhealth_hms.dtos.PatientDTO;
 import com.example.rhealth_hms.dtos.requests.CreatePatientRequest;
+import com.example.rhealth_hms.dtos.requests.UpdatePatientRequest;
 import com.example.rhealth_hms.services.PatientService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "api/vi/patient")
+@RequestMapping(path = "api/v1/patient")
 public class PatientController {
 
     private final PatientService patientService;
@@ -32,6 +33,12 @@ public class PatientController {
     @Operation(summary = "Get patient by patientId")
     public ResponseEntity<PatientDTO> getPatientById(@PathVariable String patientId){
         return ResponseEntity.ok(patientService.getPatientById(patientId));
+    }
+
+    @PutMapping(path = "/{patientId}")
+    @Operation(summary = "Update patient details")
+    public ResponseEntity<PatientDTO> updatePatientDetails(@PathVariable String patientId, @Valid @RequestBody UpdatePatientRequest request){
+        return ResponseEntity.ok(patientService.updatePatientDetails(patientId, request));
     }
 
 }
