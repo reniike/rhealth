@@ -48,7 +48,7 @@ public class QueueServiceImpl implements QueueService {
     public List<QueueDTO> getQueue(Department department, String staffId) {
         List<Queue> queues;
 
-        if (staffId != null) {
+        if (staffId != null && !staffId.trim().isEmpty()) {
             queues = repository.findAllByDepartmentAndStaff_StaffId(department, staffId);
         } else {
             queues = repository.findByDepartment(department);

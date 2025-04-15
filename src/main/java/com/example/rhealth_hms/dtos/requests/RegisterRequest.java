@@ -1,6 +1,7 @@
 package com.example.rhealth_hms.dtos.requests;
 
 import com.example.rhealth_hms.data.models.enums.Department;
+import com.example.rhealth_hms.data.models.enums.StaffStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -20,7 +21,12 @@ public class RegisterRequest {
     private String password;
 
     @NotBlank
-    private String name;
+    private String firstName;
+
+    @NotBlank
+    private String lastName;
+
+    private String phone;
 
     private Department department;
 }

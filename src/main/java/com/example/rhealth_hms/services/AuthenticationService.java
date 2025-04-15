@@ -9,9 +9,5 @@ public interface AuthenticationService {
 
     AuthResponse authenticate(LoginRequest loginRequest);
 
-    String generateToken(UserDetails userDetails);
-
-    UserDetails validateToken(String token);
-
     AuthResponse register(RegisterRequest request);
 }
