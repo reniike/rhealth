@@ -15,4 +15,6 @@ public interface SessionService {
     SessionDTO getSession(Long id);
 
     List<SessionDTO> getSessionsForCurrentDoctor();
+
+    List<SessionDTO> getSessionsForPatient(String patientId);
 }

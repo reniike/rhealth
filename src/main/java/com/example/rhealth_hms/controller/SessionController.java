@@ -48,4 +48,12 @@ public class SessionController {
         return ResponseEntity.ok(sessionService.getSessionsForCurrentDoctor());
     }
 
+    @GetMapping(path = "/patient/{patientId}")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
+    @Operation(summary = "Get all sessions for single patient")
+    public ResponseEntity<List<SessionDTO>> getSessionsForPatient(@PathVariable String patientId) {
+        return ResponseEntity.ok(sessionService.getSessionsForPatient(patientId));
+    }
+
+
 }

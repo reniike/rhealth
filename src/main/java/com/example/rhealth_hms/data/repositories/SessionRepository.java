@@ -12,4 +12,6 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
     Optional<Session> getSessionById(Long id);
 
     Optional<List<Session>> getSessionsByStaff(User staff);
+
+    Optional<List<Session>> getSessionsByPatient_PatientId(String patientPatientId);
 }
