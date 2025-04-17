@@ -26,7 +26,7 @@ public class Session extends IdEntity{
     private User staff;
 
     @Column(nullable = false)
-    private LocalDate startedAt = LocalDate.now();
+    private LocalDate startedAt;
 
     @Column(nullable = true)
     private LocalDate endedAt;
