@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "api/v1/sessions")
 @RequiredArgsConstructor
@@ -38,4 +40,12 @@ public class SessionController {
     public ResponseEntity<SessionDTO> getSession(@PathVariable Long id){
         return ResponseEntity.ok(sessionService.getSession(id));
     }
+
+    @GetMapping(path = "/doctorId")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
+    @Operation(summary = "Get all sessions for current doctor")
+    public ResponseEntity<List<SessionDTO>> getSessionsForCurrentDoctor(){
+        return ResponseEntity.ok(sessionService.getSessionsForCurrentDoctor());
+    }
+
 }

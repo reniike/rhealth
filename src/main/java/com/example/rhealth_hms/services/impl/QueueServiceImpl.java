@@ -33,7 +33,7 @@ public class QueueServiceImpl implements QueueService {
 
         Patient patient = patientService.getPatient(request.getPatientId());
         User recipient = userService.getUserById(request.getRecipientId());
-        User staff = userService.getLoggedInUser();
+        User staff = userService.getCurrentUser();
 
         Queue queue = mapper.toEntity(request);
         queue.setRecipient(recipient);

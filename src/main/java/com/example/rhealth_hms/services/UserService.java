@@ -10,5 +10,5 @@ public interface UserService {
 
     UserDTO getUser(Long userId);
 
-    User getLoggedInUser();
+    User getCurrentUser();
 }

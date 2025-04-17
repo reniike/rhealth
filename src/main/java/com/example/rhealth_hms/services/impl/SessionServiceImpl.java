@@ -18,6 +18,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.example.rhealth_hms.utils.AppUtils.NOT_FOUND;
 
@@ -33,7 +34,7 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public SessionDTO startSession(StartSessionRequest request) {
-        User user = userService.getLoggedInUser();
+        User user = userService.getCurrentUser();
         Patient patient = patientService.getPatient(request.getPatientId());
 
         Session session = Session.builder()
@@ -53,7 +54,7 @@ public class SessionServiceImpl implements SessionService {
 
         Session session = repository.getSessionById(request.getSessionId()).orElseThrow(() -> new RhealthException(NOT_FOUND));
 
-        User currentUser = userService.getLoggedInUser();
+        User currentUser = userService.getCurrentUser();
         if (!session.getStaff().getId().equals(currentUser.getId())) {
             throw new RhealthException("You’re not allowed to end this session");
         }
@@ -70,7 +71,7 @@ public class SessionServiceImpl implements SessionService {
 
         Session session = repository.getSessionById(id).orElseThrow(() -> new RhealthException(NOT_FOUND));
 
-        User currentUser = userService.getLoggedInUser();
+        User currentUser = userService.getCurrentUser();
 
         boolean isAdmin = currentUser.getDepartment() == Department.ADMIN;
         boolean isOwner = session.getStaff().getId().equals(currentUser.getId());
@@ -80,5 +81,16 @@ public class SessionServiceImpl implements SessionService {
         }
 
         return mapper.map(session, SessionDTO.class);
+    }
+
+    @Override
+    public List<SessionDTO> getSessionsForCurrentDoctor() {
+        User currentUser = userService.getCurrentUser();
+
+        List<Session> sessions = repository.getSessionsByStaff(currentUser).orElseThrow(() -> new RhealthException(NOT_FOUND));
+
+        return sessions.stream()
+                .map(session -> mapper.map(session, SessionDTO.class))
+                .toList();
     }
 }

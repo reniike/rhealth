@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @Getter
 public class SessionDTO {
 
+    private Long id;
+
     private PatientDTO patient;
 
     private SessionStatus status;

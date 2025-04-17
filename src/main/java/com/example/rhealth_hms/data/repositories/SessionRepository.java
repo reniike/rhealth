@@ -1,6 +1,7 @@
 package com.example.rhealth_hms.data.repositories;
 
 import com.example.rhealth_hms.data.models.Session;
+import com.example.rhealth_hms.data.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -10,5 +11,5 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
 
     Optional<Session> getSessionById(Long id);
 
-    List<Session> getSessionByStaff_Id(Long staffId);
+    Optional<List<Session>> getSessionsByStaff(User staff);
 }
