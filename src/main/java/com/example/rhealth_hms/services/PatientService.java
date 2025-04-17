@@ -15,7 +15,7 @@ public interface PatientService {
 
     PatientDTO getPatientById(String patientId);
 
-    Patient getPatient(String patientId);
+    Patient getPatient(Long patientId);
 
     PatientDTO updatePatientDetails(String patientId, UpdatePatientRequest request);
 }

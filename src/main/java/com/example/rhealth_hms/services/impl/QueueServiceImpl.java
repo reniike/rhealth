@@ -32,8 +32,8 @@ public class QueueServiceImpl implements QueueService {
     public QueueDTO addToQueue(CreateQueueRequest request) {
 
         Patient patient = patientService.getPatient(request.getPatientId());
-        User recipient = userService.getUserByStaffId(request.getRecipientId());
-        User staff = userService.getUserByStaffId(request.getStaffId());
+        User recipient = userService.getUserById(request.getRecipientId());
+        User staff = userService.getLoggedInUser();
 
         Queue queue = mapper.toEntity(request);
         queue.setRecipient(recipient);

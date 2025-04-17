@@ -49,8 +49,8 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Patient getPatient(String patientId) {
-        return repository.findByPatientId(patientId).orElseThrow(() -> new RhealthException(NOT_FOUND));
+    public Patient getPatient(Long patientId) {
+        return repository.findById(patientId).orElseThrow(() -> new RhealthException(NOT_FOUND));
     }
 
     @Override

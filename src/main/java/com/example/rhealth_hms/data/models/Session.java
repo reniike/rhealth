@@ -2,10 +2,7 @@ package com.example.rhealth_hms.data.models;
 
 import com.example.rhealth_hms.data.models.enums.SessionStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -14,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "sessions")
 public class Session extends IdEntity{
 
@@ -24,8 +22,11 @@ public class Session extends IdEntity{
     @Column(nullable = false)
     private SessionStatus status;
 
+    @ManyToOne(optional = false)
+    private User staff;
+
     @Column(nullable = false)
-    private LocalDate startedAt;
+    private LocalDate startedAt = LocalDate.now();
 
     @Column(nullable = true)
     private LocalDate endedAt;

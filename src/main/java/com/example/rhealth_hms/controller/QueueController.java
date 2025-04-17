@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping(path = "api/v1/queue")
 public class QueueController {
 
-    private QueueService queueService;
+    private final QueueService queueService;
 
     @PostMapping
     public ResponseEntity<QueueDTO> addToQueue(@Valid @RequestBody CreateQueueRequest request){
