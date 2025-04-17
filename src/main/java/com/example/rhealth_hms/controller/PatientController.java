@@ -27,18 +27,21 @@ public class PatientController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('RECEPTIONIST', 'DOCTOR', 'ADMIN')")
     @Operation(summary = "get all patients")
     public ResponseEntity<List<PatientDTO>> getAllPatients(){
         return ResponseEntity.ok(patientService.getAllPatients());
     }
 
     @GetMapping(path = "/{patientId}")
+    @PreAuthorize("hasAnyRole('RECEPTIONIST', 'DOCTOR', 'ADMIN')")
     @Operation(summary = "Get patient by patientId")
     public ResponseEntity<PatientDTO> getPatientById(@PathVariable String patientId){
         return ResponseEntity.ok(patientService.getPatientById(patientId));
     }
 
     @PutMapping(path = "/{patientId}")
+    @PreAuthorize("hasAnyRole('RECEPTIONIST', 'ADMIN')")
     @Operation(summary = "Update patient details")
     public ResponseEntity<PatientDTO> updatePatientDetails(@PathVariable String patientId, @Valid @RequestBody UpdatePatientRequest request){
         return ResponseEntity.ok(patientService.updatePatientDetails(patientId, request));

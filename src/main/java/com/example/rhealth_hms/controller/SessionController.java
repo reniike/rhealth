@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,14 +19,23 @@ public class SessionController {
     private final SessionService sessionService;
 
     @PostMapping
+    @PreAuthorize("hasRole('DOCTOR')")
     @Operation(summary = "start session")
     public ResponseEntity<SessionDTO> startSession(@Valid @RequestBody StartSessionRequest request){
         return ResponseEntity.ok(sessionService.startSession(request));
     }
 
     @PatchMapping
+    @PreAuthorize("hasRole('DOCTOR')")
     @Operation(summary = "end session")
     public ResponseEntity<SessionDTO> endSession(@Valid @RequestBody EndSessionRequest request){
         return ResponseEntity.ok(sessionService.endSession(request));
+    }
+
+    @GetMapping(path = "/{id}")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
+    @Operation(summary = "get session by id")
+    public ResponseEntity<SessionDTO> getSession(@PathVariable Long id){
+        return ResponseEntity.ok(sessionService.getSession(id));
     }
 }

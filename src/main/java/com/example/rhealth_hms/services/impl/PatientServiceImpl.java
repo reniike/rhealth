@@ -8,6 +8,7 @@ import com.example.rhealth_hms.dtos.requests.UpdatePatientRequest;
 import com.example.rhealth_hms.exceptions.RhealthException;
 import com.example.rhealth_hms.mappers.PatientMapper;
 import com.example.rhealth_hms.services.PatientService;
+import com.example.rhealth_hms.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

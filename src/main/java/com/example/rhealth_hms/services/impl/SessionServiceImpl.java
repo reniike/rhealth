@@ -3,6 +3,7 @@ package com.example.rhealth_hms.services.impl;
 import com.example.rhealth_hms.data.models.Patient;
 import com.example.rhealth_hms.data.models.Session;
 import com.example.rhealth_hms.data.models.User;
+import com.example.rhealth_hms.data.models.enums.Department;
 import com.example.rhealth_hms.data.models.enums.SessionStatus;
 import com.example.rhealth_hms.data.repositories.SessionRepository;
 import com.example.rhealth_hms.dtos.SessionDTO;
@@ -61,6 +62,23 @@ public class SessionServiceImpl implements SessionService {
         session.setEndedAt(LocalDate.now());
 
         repository.save(session);
+        return mapper.map(session, SessionDTO.class);
+    }
+
+    @Override
+    public SessionDTO getSession(Long id) {
+
+        Session session = repository.getSessionById(id).orElseThrow(() -> new RhealthException(NOT_FOUND));
+
+        User currentUser = userService.getLoggedInUser();
+
+        boolean isAdmin = currentUser.getDepartment() == Department.ADMIN;
+        boolean isOwner = session.getStaff().getId().equals(currentUser.getId());
+
+        if (!isAdmin && !isOwner) {
+            throw new RhealthException("Unauthorized to view this session");
+        }
+
         return mapper.map(session, SessionDTO.class);
     }
 }

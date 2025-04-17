@@ -9,4 +9,6 @@ public interface SessionService {
     SessionDTO startSession(StartSessionRequest request);
 
     SessionDTO endSession(EndSessionRequest request);
+
+    SessionDTO getSession(Long id);
 }
