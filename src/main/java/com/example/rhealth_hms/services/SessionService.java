@@ -1,5 +1,6 @@
 package com.example.rhealth_hms.services;
 
+import com.example.rhealth_hms.data.models.enums.SessionStatus;
 import com.example.rhealth_hms.dtos.SessionDTO;
 import com.example.rhealth_hms.dtos.requests.EndSessionRequest;
 import com.example.rhealth_hms.dtos.requests.StartSessionRequest;
@@ -17,4 +18,6 @@ public interface SessionService {
     List<SessionDTO> getSessionsForCurrentDoctor();
 
     List<SessionDTO> getSessionsForPatient(String patientId);
+
+    List<SessionDTO> getSessionsByStatus(SessionStatus status);
 }

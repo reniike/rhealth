@@ -102,4 +102,14 @@ public class SessionServiceImpl implements SessionService {
                 .map(session -> mapper.map(session, SessionDTO.class))
                 .toList();
     }
+
+    @Override
+    public List<SessionDTO> getSessionsByStatus(SessionStatus status) {
+        List<Session> sessions = repository.getSessionsByStatus(status).orElseThrow(() -> new RhealthException(NOT_FOUND));
+
+        return sessions.stream()
+                .map(session -> mapper.map(session, SessionDTO.class))
+                .toList();
+    }
+
 }

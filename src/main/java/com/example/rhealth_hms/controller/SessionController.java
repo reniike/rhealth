@@ -1,5 +1,6 @@
 package com.example.rhealth_hms.controller;
 
+import com.example.rhealth_hms.data.models.enums.SessionStatus;
 import com.example.rhealth_hms.dtos.SessionDTO;
 import com.example.rhealth_hms.dtos.requests.EndSessionRequest;
 import com.example.rhealth_hms.dtos.requests.StartSessionRequest;
@@ -53,6 +54,13 @@ public class SessionController {
     @Operation(summary = "Get all sessions for single patient")
     public ResponseEntity<List<SessionDTO>> getSessionsForPatient(@PathVariable String patientId) {
         return ResponseEntity.ok(sessionService.getSessionsForPatient(patientId));
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
+    @Operation(summary = "Get sessions by status")
+    public ResponseEntity<List<SessionDTO>> getSessionsByStatus(@RequestParam SessionStatus status) {
+        return ResponseEntity.ok(sessionService.getSessionsByStatus(status));
     }
 
 
