@@ -63,5 +63,4 @@ public class SessionController {
         return ResponseEntity.ok(sessionService.getSessionsByStatus(status));
     }
 
-
 }

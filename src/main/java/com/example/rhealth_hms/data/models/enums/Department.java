@@ -8,3 +8,4 @@ public enum Department {
     LAB_PERSONNEL,
     ADMIN
 }
+
