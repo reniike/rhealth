@@ -84,6 +84,11 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
+    public Session getSessionById(Long id) {
+        return repository.getSessionById(id).orElseThrow(() -> new RhealthException(NOT_FOUND));
+    }
+
+    @Override
     public List<SessionDTO> getSessionsForCurrentDoctor() {
         User currentUser = userService.getCurrentUser();
 
