@@ -7,4 +7,5 @@ public interface DiagnosisService {
 
     DiagnosisDTO createDiagnosis(CreateDiagnosisRequest request);
 
+    DiagnosisDTO getDiagnosisBySessionId(Long id);
 }
