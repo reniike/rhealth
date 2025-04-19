@@ -44,4 +44,5 @@ public class DiagnosisServiceImpl implements DiagnosisService {
         repository.save(diagnosis);
         return mapper.map(diagnosis, DiagnosisDTO.class);
     }
+
 }

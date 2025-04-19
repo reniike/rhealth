@@ -6,6 +6,7 @@ import com.example.rhealth_hms.services.DiagnosisService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,10 @@ public class DiagnosisController {
 
     private final DiagnosisService service;
 
+    @PostMapping
     public ResponseEntity<DiagnosisDTO> createDiagnosis(@RequestBody @Valid CreateDiagnosisRequest request){
         return ResponseEntity.ok(service.createDiagnosis(request));
     }
+
+
 }
