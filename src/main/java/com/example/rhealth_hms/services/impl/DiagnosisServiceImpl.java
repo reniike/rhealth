@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.example.rhealth_hms.utils.AppUtils.NOT_FOUND;
 
 @Service
@@ -60,6 +62,19 @@ public class DiagnosisServiceImpl implements DiagnosisService {
 
 
         return mapper.map(diagnosis, DiagnosisDTO.class);
+    }
+
+    @Override
+    public List<DiagnosisDTO> getDiagnosesByPatientId(Long id) {
+        User user = userService.getCurrentUser();
+
+        List<Diagnosis> diagnoses = user.getDepartment().equals(Department.ADMIN)
+                ? repository.findAllByPatient_Id(id)
+                : repository.findAllByPatient_IdAndStaff(id, user);
+
+        return diagnoses.stream()
+                .map(diagnosis -> mapper.map(diagnosis, DiagnosisDTO.class))
+                .toList();
     }
 
 }

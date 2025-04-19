@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "api/v1/diagnosis")
 @RequiredArgsConstructor
@@ -27,9 +29,15 @@ public class DiagnosisController {
     @GetMapping(path = "/session/{id}")
     @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
     @Operation(summary = "get diagnosis for a session")
-    public ResponseEntity<DiagnosisDTO> getDiagnosis(@PathVariable Long id){
+    public ResponseEntity<DiagnosisDTO> getDiagnosisBySessionId(@PathVariable Long id){
         return ResponseEntity.ok(service.getDiagnosisBySessionId(id));
     }
 
+    @GetMapping(path = "/patient/{id}")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
+    @Operation(summary = "get diagnoses for a patient")
+    public ResponseEntity<List<DiagnosisDTO>> getDiagnosesByPatientId(@PathVariable Long id){
+        return ResponseEntity.ok(service.getDiagnosesByPatientId(id));
+    }
 
 }
