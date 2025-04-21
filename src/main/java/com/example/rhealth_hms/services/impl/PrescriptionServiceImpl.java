@@ -23,11 +23,11 @@ import java.util.List;
 public class PrescriptionServiceImpl implements PrescriptionService {
 
     private final UserService userService;
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
     private final PrescriptionRepository repository;
-    private final PrescriptionItemRepository prescriptionItemRepository;
     private final DrugService drugService;
     private final SessionService sessionService;
+    private final PrescriptionItemRepository prescriptionItemRepository;
 
     @Override
     public PrescriptionDTO createPrescription(PrescriptionRequest request) {
@@ -54,7 +54,10 @@ public class PrescriptionServiceImpl implements PrescriptionService {
                 })
                 .toList();
 
+        prescriptionItemRepository.saveAll(prescriptionItems);
+
         prescription.setItems(prescriptionItems);
+        repository.save(prescription);
 
         return mapper.map(prescription, PrescriptionDTO.class);
     }
