@@ -1,9 +1,13 @@
 package com.example.rhealth_hms.controller;
 
+import com.example.rhealth_hms.dtos.PrescriptionDTO;
+import com.example.rhealth_hms.dtos.requests.PrescriptionRequest;
 import com.example.rhealth_hms.services.PrescriptionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,8 +19,8 @@ public class PrescriptionController {
     private final PrescriptionService prescriptionService;
 
     @PostMapping
-    public ResponseEntity<?> create() {
-        return ResponseEntity.ok("Ready to prescribe");
+    public ResponseEntity<PrescriptionDTO> create(@Valid @RequestBody PrescriptionRequest request) {
+        return ResponseEntity.ok(prescriptionService.createPrescription(request));
     }
 }
 
