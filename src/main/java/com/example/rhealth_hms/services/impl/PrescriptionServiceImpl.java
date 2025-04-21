@@ -8,6 +8,7 @@ import com.example.rhealth_hms.dtos.PrescriptionDTO;
 import com.example.rhealth_hms.dtos.PrescriptionItemDTO;
 import com.example.rhealth_hms.dtos.requests.PrescriptionRequest;
 import com.example.rhealth_hms.exceptions.RhealthException;
+import com.example.rhealth_hms.mappers.PrescriptionMapper;
 import com.example.rhealth_hms.services.DrugService;
 import com.example.rhealth_hms.services.PrescriptionService;
 import com.example.rhealth_hms.services.SessionService;
@@ -27,6 +28,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
     private final UserService userService;
     private final ModelMapper mapper;
+    private final PrescriptionMapper prescriptionMapper;
     private final PrescriptionRepository repository;
     private final DrugService drugService;
     private final SessionService sessionService;
@@ -67,15 +69,14 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
     @Override
     public PrescriptionDTO getPrescriptionBySessionId(Long sessionId) {
-        Prescription prescription = repository.getPrescriptionsBySession_Id(sessionId).orElseThrow(() -> new RhealthException(NOT_FOUND));
-        List<PrescriptionItem> items = prescription.getItems();
+        Prescription prescription = repository.getPrescriptionBySession_Id(sessionId)
+                .orElseThrow(() -> new RhealthException("Prescription not found for session ID: " + sessionId));
+        return prescriptionMapper.toDTO(prescription);
+    }
 
-        List<PrescriptionItemDTO> prescriptionItem = items.stream()
-                .map(item -> mapper.map(item, PrescriptionItemDTO.class))
-                .toList();
-
-        PrescriptionDTO prescriptionDTO = mapper.map(prescription, PrescriptionDTO.class);
-        prescriptionDTO.setItems(prescriptionItem);
-        return prescriptionDTO;
+    @Override
+    public List<PrescriptionDTO> getPrescriptionsByPatientId(Long patientId) {
+        List<Prescription> prescriptions = repository.findAllByPatient_Id(patientId);
+        return prescriptionMapper.toDTOs(prescriptions);
     }
 }

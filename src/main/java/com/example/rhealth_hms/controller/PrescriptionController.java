@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/prescriptions")
 @RequiredArgsConstructor
@@ -29,6 +31,13 @@ public class PrescriptionController {
     @Operation(summary = "get prescription by session id")
     public ResponseEntity<PrescriptionDTO> getPrescription(@PathVariable Long sessionId){
         return ResponseEntity.ok(prescriptionService.getPrescriptionBySessionId(sessionId));
+    }
+
+    @GetMapping(path = "/patient/{patientId}")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PHARMACIST')")
+    @Operation(summary = "get prescription by patient id")
+    public ResponseEntity<List<PrescriptionDTO>> getPrescriptions(@PathVariable Long patientId){
+        return ResponseEntity.ok(prescriptionService.getPrescriptionsByPatientId(patientId));
     }
 }
 
