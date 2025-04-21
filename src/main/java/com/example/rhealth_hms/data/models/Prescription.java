@@ -1,10 +1,9 @@
 package com.example.rhealth_hms.data.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Setter
 @Getter
@@ -16,17 +15,14 @@ import lombok.*;
 public class Prescription extends IdEntity{
 
     @ManyToOne(optional = false)
-    private Drug drug;
-
-    @ManyToOne(optional = false)
-    private User staff;
-
-    @ManyToOne(optional = false)
     private Session session;
 
     @ManyToOne(optional = false)
     private Patient patient;
 
-    @Column(nullable = false)
-    private String note;
+    @ManyToOne(optional = false)
+    private User staff;
+
+    @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL)
+    private List<PrescriptionItem> items;
 }
