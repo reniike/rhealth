@@ -8,10 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/prescriptions")
@@ -25,6 +22,13 @@ public class PrescriptionController {
     @Operation(summary = "create prescription")
     public ResponseEntity<PrescriptionDTO> create(@Valid @RequestBody PrescriptionRequest request) {
         return ResponseEntity.ok(prescriptionService.createPrescription(request));
+    }
+
+    @GetMapping(path = "/session/{sessionId}")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN', 'PHARMACIST')")
+    @Operation(summary = "get prescription by session id")
+    public ResponseEntity<PrescriptionDTO> getPrescription(@PathVariable Long sessionId){
+        return ResponseEntity.ok(prescriptionService.getPrescriptionBySessionId(sessionId));
     }
 }
 

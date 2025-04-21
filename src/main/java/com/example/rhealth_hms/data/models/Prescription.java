@@ -23,6 +23,6 @@ public class Prescription extends IdEntity{
     @ManyToOne(optional = false)
     private User staff;
 
-    @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PrescriptionItem> items;
 }

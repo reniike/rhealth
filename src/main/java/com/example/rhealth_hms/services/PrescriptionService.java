@@ -7,4 +7,5 @@ public interface PrescriptionService {
 
     PrescriptionDTO createPrescription(PrescriptionRequest request);
 
+    PrescriptionDTO getPrescriptionBySessionId(Long sessionId);
 }

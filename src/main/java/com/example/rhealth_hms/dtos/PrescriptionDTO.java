@@ -3,11 +3,13 @@ package com.example.rhealth_hms.dtos;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 public class PrescriptionDTO {
 
-    private DrugDTO drug;
+    private Long id;
 
     private UserDTO staff;
 
@@ -15,5 +17,5 @@ public class PrescriptionDTO {
 
     private SessionDTO session;
 
-    private String note;
+    private List<PrescriptionItemDTO> items;
 }
