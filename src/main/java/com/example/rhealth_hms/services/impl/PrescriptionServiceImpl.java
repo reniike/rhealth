@@ -79,4 +79,11 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         List<Prescription> prescriptions = repository.findAllByPatient_Id(patientId);
         return prescriptionMapper.toDTOs(prescriptions);
     }
+
+    @Override
+    public void deletePrescription(Long id) {
+        User user = userService.getCurrentUser();
+        if (!user.getDepartment().equals(Department.DOCTOR)) throw new RhealthException(UNAUTHORIZED);
+        repository.deleteById(id);
+    }
 }

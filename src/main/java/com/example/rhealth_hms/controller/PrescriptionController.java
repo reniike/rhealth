@@ -39,5 +39,13 @@ public class PrescriptionController {
     public ResponseEntity<List<PrescriptionDTO>> getPrescriptions(@PathVariable Long patientId){
         return ResponseEntity.ok(prescriptionService.getPrescriptionsByPatientId(patientId));
     }
+
+    @DeleteMapping(path = "/{id}")
+    @PreAuthorize("hasRole('DOCTOR')")
+    @Operation(summary = "delete prescription")
+    public ResponseEntity<Void> deletePrescription(@PathVariable Long id) {
+        prescriptionService.deletePrescription(id);
+        return ResponseEntity.noContent().build();
+    }
 }
 

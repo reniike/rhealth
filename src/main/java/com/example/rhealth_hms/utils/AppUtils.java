@@ -4,5 +4,5 @@ public class AppUtils {
 
     public static final String NOT_FOUND = "Not found!";
 
-    public static final String UNAUTHORIZED = "Unauthorized user";
+    public static final String UNAUTHORIZED = "Unauthorized user!";
 }
