@@ -47,5 +47,7 @@ public class PrescriptionController {
         prescriptionService.deletePrescription(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }
 
