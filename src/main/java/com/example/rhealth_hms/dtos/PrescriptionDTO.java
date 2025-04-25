@@ -1,5 +1,6 @@
 package com.example.rhealth_hms.dtos;
 
+import com.example.rhealth_hms.data.models.enums.PrescriptionStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,8 @@ public class PrescriptionDTO {
     private PatientDTO patient;
 
     private SessionDTO session;
+
+    private PrescriptionStatus prescriptionStatus;
 
     private List<PrescriptionItemDTO> items;
 }

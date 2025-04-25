@@ -6,7 +6,6 @@ import com.example.rhealth_hms.data.models.enums.PrescriptionStatus;
 import com.example.rhealth_hms.data.repositories.PrescriptionItemRepository;
 import com.example.rhealth_hms.data.repositories.PrescriptionRepository;
 import com.example.rhealth_hms.dtos.PrescriptionDTO;
-import com.example.rhealth_hms.dtos.PrescriptionItemDTO;
 import com.example.rhealth_hms.dtos.requests.PrescriptionRequest;
 import com.example.rhealth_hms.exceptions.RhealthException;
 import com.example.rhealth_hms.mappers.PrescriptionMapper;
@@ -88,7 +87,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         if (!user.getDepartment().equals(Department.DOCTOR)) throw new RhealthException(UNAUTHORIZED);
 
         Prescription prescription = repository.getPrescriptionById(id).orElseThrow(() -> new RhealthException(NOT_FOUND));
-        if (prescription.getPrescriptionStatus().equals(PrescriptionStatus.COMPLETED)) throw new RhealthException("Prescription already fulfilled. Cannot delete.");
+        if (prescription.getPrescriptionStatus().equals(PrescriptionStatus.FULFILLED)) throw new RhealthException("Prescription already fulfilled. Cannot delete.");
         repository.deleteById(id);
     }
 }

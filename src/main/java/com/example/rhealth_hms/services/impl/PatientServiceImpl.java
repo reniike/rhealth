@@ -1,6 +1,8 @@
 package com.example.rhealth_hms.services.impl;
 
 import com.example.rhealth_hms.data.models.Patient;
+import com.example.rhealth_hms.data.models.User;
+import com.example.rhealth_hms.data.models.enums.Department;
 import com.example.rhealth_hms.data.repositories.PatientRepository;
 import com.example.rhealth_hms.dtos.PatientDTO;
 import com.example.rhealth_hms.dtos.requests.CreatePatientRequest;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Random;
 
 import static com.example.rhealth_hms.utils.AppUtils.NOT_FOUND;
+import static com.example.rhealth_hms.utils.AppUtils.UNAUTHORIZED;
 
 @Service
 @AllArgsConstructor
@@ -26,9 +29,15 @@ public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository repository;
     private final PatientMapper patientMapper;
+    private final UserService userService;
 
     @Override
     public PatientDTO createPatient(CreatePatientRequest request) {
+        User user = userService.getCurrentUser();
+        if (!List.of(Department.ADMIN, Department.RECEPTIONIST).contains(user.getDepartment())) {
+            throw new RhealthException(UNAUTHORIZED);
+        }
+
         Patient patient = patientMapper.toEntity(request);
         patient.setPatientId(generateUniquePatientId());
 
@@ -56,6 +65,11 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public PatientDTO updatePatientDetails(String patientId, UpdatePatientRequest request) {
+        User user = userService.getCurrentUser();
+        if (!List.of(Department.ADMIN, Department.RECEPTIONIST).contains(user.getDepartment())) {
+            throw new RhealthException(UNAUTHORIZED);
+        }
+
         Patient patient = repository.findByPatientId(patientId).orElseThrow(() -> new RhealthException(NOT_FOUND));
         return patientMapper.toDTO(repository.save(patient));
     }

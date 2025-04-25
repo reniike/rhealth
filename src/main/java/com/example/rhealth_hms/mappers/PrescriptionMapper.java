@@ -16,6 +16,7 @@ public interface PrescriptionMapper {
 
     @Mapping(source = "drug.id", target = "drugId")
     @Mapping(source = "drug.name", target = "drugName")
+    @Mapping(source = "prescriptionStatus", target = "prescriptionStatus")
     PrescriptionItemDTO toDTO(PrescriptionItem item);
 
     List<PrescriptionDTO> toDTOs(List<Prescription> prescriptions);

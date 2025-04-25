@@ -48,6 +48,11 @@ public class PrescriptionController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @PatchMapping(path = "/{id}")
+    @PreAuthorize("hasRole('DOCTOR')")
+    @Operation(summary = "edit prescription")
+    public ResponseEntity<PrescriptionDTO> edit(@Valid @RequestBody EditPreonsciptionRequest request){
+        return ResponseEntity.ok(prescriptionService.editPrescription(request));
+    }
 }
 
