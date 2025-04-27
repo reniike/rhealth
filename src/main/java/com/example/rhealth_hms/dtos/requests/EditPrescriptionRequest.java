@@ -9,11 +9,11 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PrescriptionRequest {
+public class EditPrescriptionRequest {
 
-    @NotNull(message = "Session ID is required")
-    private Long sessionId;
+    @NotNull(message = "Prescription ID is required")
+    private Long prescriptionId;
 
-    @NotEmpty(message = "At least one drug must be prescribed")
-    private List<PrescriptionItemRequest> items;
+    @NotEmpty(message = "Items are required")
+    private List<EditPrescriptionItem> items;
 }

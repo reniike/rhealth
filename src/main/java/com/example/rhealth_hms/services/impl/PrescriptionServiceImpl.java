@@ -3,9 +3,10 @@ package com.example.rhealth_hms.services.impl;
 import com.example.rhealth_hms.data.models.*;
 import com.example.rhealth_hms.data.models.enums.Department;
 import com.example.rhealth_hms.data.models.enums.PrescriptionStatus;
-import com.example.rhealth_hms.data.repositories.PrescriptionItemRepository;
 import com.example.rhealth_hms.data.repositories.PrescriptionRepository;
 import com.example.rhealth_hms.dtos.PrescriptionDTO;
+import com.example.rhealth_hms.dtos.requests.AbstractPrescriptionItemRequest;
+import com.example.rhealth_hms.dtos.requests.EditPrescriptionRequest;
 import com.example.rhealth_hms.dtos.requests.PrescriptionRequest;
 import com.example.rhealth_hms.exceptions.RhealthException;
 import com.example.rhealth_hms.mappers.PrescriptionMapper;
@@ -32,12 +33,15 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     private final PrescriptionRepository repository;
     private final DrugService drugService;
     private final SessionService sessionService;
-    private final PrescriptionItemRepository prescriptionItemRepository;
 
     @Override
     public PrescriptionDTO createPrescription(PrescriptionRequest request) {
         User user = userService.getCurrentUser();
-        if (!user.getDepartment().equals(Department.DOCTOR)) throw new RhealthException(UNAUTHORIZED);
+
+        if (!user.getDepartment().equals(Department.DOCTOR)) {
+            throw new RhealthException(UNAUTHORIZED);
+        }
+
         Session session = sessionService.getSessionById(request.getSessionId());
 
         Prescription prescription = Prescription.builder()
@@ -47,31 +51,62 @@ public class PrescriptionServiceImpl implements PrescriptionService {
                 .prescriptionStatus(PrescriptionStatus.PENDING)
                 .build();
 
-        List<PrescriptionItem> prescriptionItems = request.getItems().stream()
-                .map(items -> {
-                    Drug drug = drugService.getDrug(items.getDrugId());
+        List<PrescriptionItem> items = buildPrescriptionItems(prescription, request.getItems());
+        prescription.setItems(items);
 
-                    return PrescriptionItem.builder()
-                            .drug(drug)
-                            .quantity(items.getQuantity())
-                            .prescription(prescription)
-                            .note(items.getNote())
-                            .build();
-                })
-                .toList();
-
-        prescriptionItemRepository.saveAll(prescriptionItems);
-
-        prescription.setItems(prescriptionItems);
         repository.save(prescription);
 
         return mapper.map(prescription, PrescriptionDTO.class);
     }
 
     @Override
+    public PrescriptionDTO editPrescription(EditPrescriptionRequest request) {
+        User user = userService.getCurrentUser();
+
+        if (!user.getDepartment().equals(Department.DOCTOR)) {
+            throw new RhealthException(UNAUTHORIZED);
+        }
+
+        Prescription prescription = repository.findById(request.getPrescriptionId())
+                .orElseThrow(() -> new RhealthException(NOT_FOUND));
+
+        if (prescription.getPrescriptionStatus().equals(PrescriptionStatus.FULFILLED)) {
+            throw new RhealthException("Cannot edit. Prescription already fulfilled.");
+        }
+
+        prescription.getItems().clear();
+
+        List<PrescriptionItem> updatedItems = buildPrescriptionItems(prescription, request.getItems());
+        prescription.setItems(updatedItems);
+
+        repository.save(prescription);
+
+        return mapper.map(prescription, PrescriptionDTO.class);
+    }
+
+    @Override
+    public void deletePrescription(Long id) {
+        User user = userService.getCurrentUser();
+
+        if (!user.getDepartment().equals(Department.DOCTOR)) {
+            throw new RhealthException(UNAUTHORIZED);
+        }
+
+        Prescription prescription = repository.getPrescriptionById(id)
+                .orElseThrow(() -> new RhealthException(NOT_FOUND));
+
+        if (prescription.getPrescriptionStatus().equals(PrescriptionStatus.FULFILLED)) {
+            throw new RhealthException("Prescription already fulfilled. Cannot delete.");
+        }
+
+        repository.deleteById(id);
+    }
+
+    @Override
     public PrescriptionDTO getPrescriptionBySessionId(Long sessionId) {
         Prescription prescription = repository.getPrescriptionBySession_Id(sessionId)
                 .orElseThrow(() -> new RhealthException("Prescription not found for session ID: " + sessionId));
+
         return prescriptionMapper.toDTO(prescription);
     }
 
@@ -81,13 +116,20 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         return prescriptionMapper.toDTOs(prescriptions);
     }
 
-    @Override
-    public void deletePrescription(Long id) {
-        User user = userService.getCurrentUser();
-        if (!user.getDepartment().equals(Department.DOCTOR)) throw new RhealthException(UNAUTHORIZED);
-
-        Prescription prescription = repository.getPrescriptionById(id).orElseThrow(() -> new RhealthException(NOT_FOUND));
-        if (prescription.getPrescriptionStatus().equals(PrescriptionStatus.FULFILLED)) throw new RhealthException("Prescription already fulfilled. Cannot delete.");
-        repository.deleteById(id);
+    /**
+     * Builds PrescriptionItem entities from request items
+     */
+    private List<PrescriptionItem> buildPrescriptionItems(Prescription prescription, List<? extends AbstractPrescriptionItemRequest> itemRequests) {
+        return itemRequests.stream()
+                .map(itemRequest -> {
+                    Drug drug = drugService.getDrug(itemRequest.getDrugId());
+                    return PrescriptionItem.builder()
+                            .prescription(prescription)
+                            .drug(drug)
+                            .quantity(itemRequest.getQuantity())
+                            .note(itemRequest.getNote())
+                            .build();
+                })
+                .toList();
     }
 }

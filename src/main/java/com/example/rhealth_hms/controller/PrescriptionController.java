@@ -1,6 +1,7 @@
 package com.example.rhealth_hms.controller;
 
 import com.example.rhealth_hms.dtos.PrescriptionDTO;
+import com.example.rhealth_hms.dtos.requests.EditPrescriptionRequest;
 import com.example.rhealth_hms.dtos.requests.PrescriptionRequest;
 import com.example.rhealth_hms.services.PrescriptionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,7 +52,7 @@ public class PrescriptionController {
     @PatchMapping(path = "/{id}")
     @PreAuthorize("hasRole('DOCTOR')")
     @Operation(summary = "edit prescription")
-    public ResponseEntity<PrescriptionDTO> edit(@Valid @RequestBody EditPreonsciptionRequest request){
+    public ResponseEntity<PrescriptionDTO> edit(@Valid @RequestBody EditPrescriptionRequest request){
         return ResponseEntity.ok(prescriptionService.editPrescription(request));
     }
 }
